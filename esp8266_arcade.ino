@@ -54,6 +54,8 @@ void returnToMenu();
 #include "Tetris.h"
 #include "FlappyBird.h"
 #include "Pacman.h"
+#include "ReactionTime.h"
+#include "Stacker.h"
 
 
 // --- Main Program ---
