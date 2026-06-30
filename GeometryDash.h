@@ -7,8 +7,11 @@ private:
     const float jumpForce = -6.0;
     bool isGrounded = true;
     
-    float spikeX = 128;
-    int spikeCount = 1; // 1 to 3 consecutive spikes
+    float obsX = 128;
+    int obsType = 0;
+    int obsParam1 = 1; 
+    int obsParam2 = 0; 
+    
     float speed = 3.0; // horizontal speed
     
     int score = 0;
@@ -22,8 +25,10 @@ public:
         pY = 54;
         pVY = 0;
         isGrounded = true;
-        spikeX = 128;
-        spikeCount = 1;
+        obsX = 128;
+        obsType = 0;
+        obsParam1 = 1;
+        obsParam2 = 0;
         speed = 3.0;
         score = 0;
         state = 500;
@@ -40,50 +45,121 @@ public:
             lastSelect = currSelect;
 
             pVY += gravity;
-            pY += pVY;
+            obsX -= speed;
             
-            if (pY >= 54) {
-                pY = 54;
-                pVY = 0;
-                isGrounded = true;
-            }
-
-            spikeX -= speed;
-            
-            if (spikeX < -(spikeCount * 12)) {
-                spikeX = 128 + random(0, 40); // Random distance before next spike group
-                spikeCount = random(1, 4); // 1, 2, or 3 spikes
-                score++;
-                if (score % 5 == 0 && speed < 7.0) speed += 0.5; // Speed up capping at 7
-            }
-
-            // Collision (generous hitbox for triangles)
+            float currentFloorY = 54;
             int pLeft = 20;
             int pRight = 28;
-            int pBottom = pY + 8;
             
-            int sLeft = (int)spikeX + 2;
-            int sRight = (int)spikeX + (spikeCount * 12) - 2;
-            int sTop = 56; // Give a couple pixels of leniency on the tip
+            if (obsType == 1 || obsType == 2) {
+                int tLeft = (int)obsX;
+                int tRight = (int)obsX + obsParam1;
+                
+                if (pRight > tLeft && pLeft < tRight) {
+                    if (obsType == 1) { // Tower
+                        int tTop = 62 - obsParam2;
+                        if (pY + 8 > tTop + 0.1) {
+                            state = 501;
+                            delay(500);
+                        } else {
+                            currentFloorY = tTop - 8;
+                        }
+                    } else if (obsType == 2) { // Platform
+                        int tTop = 62 - obsParam2;
+                        int tBottom = tTop + 6;
+                        if (pY + 8 > tTop + 0.1 && pY < tBottom - 0.1) {
+                            state = 501;
+                            delay(500);
+                        } else if (pY + 8 <= tTop + 0.1) {
+                            currentFloorY = tTop - 8;
+                        }
+                    }
+                }
+            } else if (obsType == 3) { // Pit
+                int tLeft = (int)obsX;
+                int tRight = (int)obsX + obsParam1;
+                if (pRight > tLeft + 2 && pLeft < tRight - 2) {
+                    currentFloorY = 100; // bottomless pit
+                }
+            }
+            
+            pY += pVY;
+            
+            if (pY >= currentFloorY && state != 501) {
+                pY = currentFloorY;
+                pVY = 0;
+                isGrounded = true;
+            } else {
+                isGrounded = false;
+            }
 
-            if (pRight > sLeft && pLeft < sRight && pBottom > sTop) {
+            if (pY > 64 && state != 501) {
                 state = 501;
                 delay(500);
+            }
+
+            // Spike check
+            if (obsType == 0 && state != 501) {
+                int sLeft = (int)obsX + 2;
+                int sRight = (int)obsX + (obsParam1 * 12) - 2;
+                int sTop = 56;
+                if (pRight > sLeft && pLeft < sRight && pY + 8 > sTop) {
+                    state = 501;
+                    delay(500);
+                }
+            }
+            
+            int obsWidth = (obsType == 0) ? (obsParam1 * 12) : obsParam1;
+            if (obsX < -obsWidth && state != 501) {
+                obsX = 128 + random(10, 30);
+                obsType = random(0, 4); // 0: Spikes, 1: Tower, 2: Platform, 3: Pit
+                
+                if (obsType == 0) {
+                    obsParam1 = random(1, 4);
+                } else if (obsType == 1) {
+                    obsParam1 = random(16, 32);
+                    obsParam2 = random(12, 22);
+                } else if (obsType == 2) {
+                    obsParam1 = random(20, 36);
+                    obsParam2 = random(15, 25);
+                } else if (obsType == 3) {
+                    obsParam1 = random(25, 45); 
+                }
+                
+                score++;
+                if (score % 5 == 0 && speed < 7.0) speed += 0.4;
             }
 
             display.clearDisplay();
             
             // Draw Ground
-            display.drawLine(0, 62, 128, 62, WHITE);
+            if (obsType == 3) {
+                int pitStart = max(0, (int)obsX);
+                int pitEnd = min(128, (int)obsX + obsParam1);
+                if (pitStart > 0) display.drawLine(0, 62, pitStart, 62, WHITE);
+                if (pitEnd < 128) display.drawLine(pitEnd, 62, 128, 62, WHITE);
+            } else {
+                display.drawLine(0, 62, 128, 62, WHITE);
+            }
             
             // Draw Player Cube
-            display.drawRect(pLeft, pY, 8, 8, WHITE);
-            display.fillRect(pLeft + 2, pY + 2, 4, 4, WHITE); // Inner detail
+            display.drawRect(pLeft, (int)pY, 8, 8, WHITE);
+            display.fillRect(pLeft + 2, (int)pY + 2, 4, 4, WHITE);
             
-            // Draw Spikes
-            for (int i = 0; i < spikeCount; i++) {
-                int sx = (int)spikeX + (i * 12);
-                display.fillTriangle(sx, 62, sx + 6, 54, sx + 12, 62, WHITE);
+            // Draw Obstacles
+            if (obsType == 0) {
+                for (int i = 0; i < obsParam1; i++) {
+                    int sx = (int)obsX + (i * 12);
+                    display.fillTriangle(sx, 62, sx + 6, 54, sx + 12, 62, WHITE);
+                }
+            } else if (obsType == 1) {
+                display.drawRect((int)obsX, 62 - obsParam2, obsParam1, obsParam2, WHITE);
+                if (obsParam1 > 4 && obsParam2 > 4) {
+                    display.drawRect((int)obsX + 2, 62 - obsParam2 + 2, obsParam1 - 4, obsParam2 - 4, WHITE);
+                }
+            } else if (obsType == 2) {
+                display.drawRect((int)obsX, 62 - obsParam2, obsParam1, 6, WHITE);
+                display.drawLine((int)obsX + 2, 62 - obsParam2 + 2, (int)obsX + obsParam1 - 3, 62 - obsParam2 + 2, WHITE);
             }
 
             display.setCursor(0, 0);

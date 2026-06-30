@@ -137,9 +137,12 @@ void loop() {
       if (masterMenuOption == idx) display.print("> ");
       
       if (idx < registeredGamesCount) {
+        display.print(idx + 1);
+        display.print(". ");
         display.print(gamesRegistry[idx]->getName());
       } else {
-        display.print("Settings");
+        display.print(idx + 1);
+        display.print(". Settings");
       }
     }
     
