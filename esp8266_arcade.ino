@@ -57,6 +57,7 @@ void returnToMenu();
 #include "ReactionTime.h"
 #include "Stacker.h"
 #include "GeometryDash.h"
+#include "Pinball.h"
 
 
 // --- Main Program ---

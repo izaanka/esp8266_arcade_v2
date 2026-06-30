@@ -18,6 +18,7 @@ This project features a dynamic, object-oriented architecture where games are se
 - **Reaction Time**: Test your reflexes! Press the button as quickly as you can when the screen flashes.
 - **Stacker**: Stack the moving blocks to the top of the screen to win the major prize!
 - **Geometry Dash**: An intense rhythm-style runner where you jump over clusters of triangular spikes.
+- **Pinball**: A physics-based mini-pinball table featuring working flippers, gravity, and score bumpers!
 
 ---
 
