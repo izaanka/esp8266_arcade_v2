@@ -4,21 +4,25 @@ A modular, multi-game arcade platform built for the ESP8266 microcontroller and 
 
 This project features a dynamic, object-oriented architecture where games are self-registering. Adding a new game is as simple as dropping in a header file and including it in the main sketch!
 
-## Included Games
-- **Lights Out**: A classic puzzle game where you try to turn off all the lights on grids of varying sizes.
-- **Breakout**: A brick-breaking game using a paddle and a ball.
-- **Block Jump**: An endless runner where you jump over procedurally generated obstacles.
-- **Simon Says**: A memory game that tests your pattern recognition.
-- **Minesweeper**: The classic PC game, complete with flagging functionality.
-- **Space Shooter**: Defend Earth from descending aliens!
-- **Tic-Tac-Toe**: Play against a friend or a Minimax-powered AI.
-- **Tetris**: The timeless block-stacking puzzle game.
-- **Flappy Bird**: A miniaturized physics-based runner where you navigate between pipes.
-- **Pacman**: A custom 16x8 wrap-around maze where you eat dots and avoid a smart ghost.
-- **Reaction Time**: Test your reflexes! Press the button as quickly as you can when the screen flashes.
-- **Stacker**: Stack the moving blocks to the top of the screen to win the major prize!
-- **Geometry Dash**: An intense rhythm-style runner where you jump over clusters of triangular spikes.
-- **Pinball**: A physics-based mini-pinball table featuring working flippers, gravity, and score bumpers!
+## Included Games (50 Total!)
+
+### 🧠 Puzzle & Logic
+- **Lights Out**, **Simon Says**, **Minesweeper**, **Tic-Tac-Toe**, **Tetris**, **2048**, **Sokoban**, **Connect 4**, **Mastermind**, **Math Quiz**
+
+### 🕹️ Arcade Classics
+- **Breakout**, **Space Shooter**, **Pacman**, **Asteroids**, **Frogger**, **Pong**, **Lunar Lander**, **Space Invaders**, **Duck Hunt**, **River Raid**, **Missile Command**
+
+### 🏃 Runners & Platformers
+- **Block Jump**, **Flappy Bird**, **Geometry Dash**, **Snake**, **Sky Jumper**, **T-Rex Run**, **Fall Down**, **Helicopter**, **Slalom Skiing**
+
+### 💥 Action & Physics
+- **Pinball**, **Highway Racing**, **Apple Catch**, **Artillery**, **Mars Rover**, **Timber**
+
+### ⚡ Reflex & Timing
+- **Reaction Time**, **Stacker**, **Whack-A-Mole**, **Rhythm Hero**, **Bop It**, **Bowling**, **Maze Runner**, **Tron Lightcycles**
+
+### 🎰 Casino & Parlor
+- **Blackjack 21**, **Slot Machine**, **Memory Match**
 
 ---
 
