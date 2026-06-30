@@ -52,6 +52,9 @@ void returnToMenu();
 #include "SpaceShooter.h"
 #include "TicTacToe.h"
 #include "Tetris.h"
+#include "FlappyBird.h"
+#include "Pacman.h"
+
 
 // --- Main Program ---
 int masterState = 0; // 0: Master Menu, 1: Playing Game

@@ -51,7 +51,7 @@ public:
                 shooterScore++;
                 alienY = 0;
                 alienX = random(10, 110);
-                alienDir = (alienDir > 0) ? alienDir + 1 : alienDir - 1; 
+                alienDir = (alienDir > 0) ? min(5, alienDir + 1) : max(-5, alienDir - 1); 
               }
             }
         

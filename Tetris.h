@@ -19,6 +19,7 @@ private:
     
     unsigned long lastDropTime = 0;
     unsigned long rightPressTime = 0;
+    bool rightDropTriggered = false;
     int dropDelay = 500;
 
     bool lastLeft = true, lastRight = true, lastSelect = true;
@@ -94,6 +95,7 @@ public:
         dropDelay = 500;
         state = 0;
         lastLeft = lastRight = lastSelect = true;
+        rightDropTriggered = false;
         spawnPiece();
         lastDropTime = millis();
     }
@@ -112,11 +114,12 @@ public:
                 if (lastRight == HIGH) {
                     if (!checkCollision(cx + 1, cy, type, rot)) cx++;
                     rightPressTime = millis();
-                } else {
+                    rightDropTriggered = false;
+                } else if (!rightDropTriggered) {
                     if (millis() - rightPressTime > 400) { // Hard drop threshold
                         while (!checkCollision(cx, cy + 1, type, rot)) cy++;
                         lockPiece();
-                        rightPressTime = millis() + 5000; // Prevent repeating until button released
+                        rightDropTriggered = true;
                     }
                 }
             }
