@@ -81,6 +81,32 @@ public:
                 if (pRight > tLeft + 2 && pLeft < tRight - 2) {
                     currentFloorY = 100; // bottomless pit
                 }
+            } else if (obsType == 4) { // Floating Spikes
+                int tLeft = (int)obsX;
+                int tRight = (int)obsX + (obsParam1 * 12);
+                int tBottom = 62 - obsParam2; // tip of spike
+                if (pRight > tLeft + 2 && pLeft < tRight - 2) {
+                    if (pY < tBottom) {
+                        state = 501; delay(500);
+                    }
+                }
+            } else if (obsType == 5) { // Staircase
+                int tLeft = (int)obsX;
+                int stepWidth = obsParam2;
+                int numSteps = obsParam1;
+                int tRight = tLeft + stepWidth * numSteps;
+                if (pRight > tLeft && pLeft < tRight) {
+                    int stepIdx = (pRight - tLeft - 1) / stepWidth;
+                    if (stepIdx < 0) stepIdx = 0;
+                    if (stepIdx >= numSteps) stepIdx = numSteps - 1;
+                    
+                    int stepTop = 62 - (stepIdx + 1) * 8;
+                    if (pY + 8 > stepTop + 0.1) {
+                        state = 501; delay(500); // hit side
+                    } else {
+                        currentFloorY = stepTop - 8;
+                    }
+                }
             }
             
             pY += pVY;
@@ -109,10 +135,10 @@ public:
                 }
             }
             
-            int obsWidth = (obsType == 0) ? (obsParam1 * 12) : obsParam1;
+            int obsWidth = (obsType == 0 || obsType == 4) ? (obsParam1 * 12) : ((obsType == 5) ? (obsParam1 * obsParam2) : obsParam1);
             if (obsX < -obsWidth && state != 501) {
                 obsX = 128 + random(10, 30);
-                obsType = random(0, 4); // 0: Spikes, 1: Tower, 2: Platform, 3: Pit
+                obsType = random(0, 6); // 0: Spikes, 1: Tower, 2: Platform, 3: Pit, 4: Floating Spikes, 5: Staircase
                 
                 if (obsType == 0) {
                     obsParam1 = random(1, 4);
@@ -124,6 +150,12 @@ public:
                     obsParam2 = random(15, 25);
                 } else if (obsType == 3) {
                     obsParam1 = random(25, 45); 
+                } else if (obsType == 4) {
+                    obsParam1 = random(1, 3); // num spikes
+                    obsParam2 = random(15, 25); // height from ground to tip
+                } else if (obsType == 5) {
+                    obsParam1 = random(2, 4); // num steps
+                    obsParam2 = random(8, 14); // step width
                 }
                 
                 score++;
@@ -160,6 +192,20 @@ public:
             } else if (obsType == 2) {
                 display.drawRect((int)obsX, 62 - obsParam2, obsParam1, 6, WHITE);
                 display.drawLine((int)obsX + 2, 62 - obsParam2 + 2, (int)obsX + obsParam1 - 3, 62 - obsParam2 + 2, WHITE);
+            } else if (obsType == 4) { // Floating Spikes
+                for (int i = 0; i < obsParam1; i++) {
+                    int sx = (int)obsX + (i * 12);
+                    int sBot = 62 - obsParam2;
+                    int sTop = sBot - 8;
+                    display.fillTriangle(sx, sTop, sx + 6, sBot, sx + 12, sTop, WHITE);
+                    display.fillRect(sx, sTop - 10, 12, 10, WHITE);
+                }
+            } else if (obsType == 5) { // Staircase
+                for (int i = 0; i < obsParam1; i++) {
+                    int sx = (int)obsX + i * obsParam2;
+                    int h = (i + 1) * 8;
+                    display.drawRect(sx, 62 - h, obsParam2, h, WHITE);
+                }
             }
 
             display.setCursor(0, 0);

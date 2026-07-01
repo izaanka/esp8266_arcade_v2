@@ -6,8 +6,8 @@ private:
     int score = 0;
     int state = 600; // 600 = playing, 601 = game over
     
-    int bumpX[3] = {50, 78, 64};
-    int bumpY[3] = {20, 20, 35};
+    int bumpX[5] = {50, 78, 64, 42, 86};
+    int bumpY[5] = {20, 20, 35, 12, 12};
     
     bool lFlip = false;
     bool rFlip = false;
@@ -67,7 +67,7 @@ public:
             }
 
             // Bumper Collisions
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 5; i++) {
                 float dx = bX - bumpX[i];
                 float dy = bY - bumpY[i];
                 float dist = sqrt(dx*dx + dy*dy);
@@ -83,54 +83,52 @@ public:
                 }
             }
 
-            // Left Flipper Zone (X: 45 to 64)
-            if (bX >= 45 && bX <= 64) {
-                if (lFlip && !lastLFlip) {
-                    // Sweeping UP
-                    if (bY >= 50 && bY <= 64) {
-                        bY = 50;
-                        bVY = -5.0; // powerful hit
-                        bVX = (bX - 45) * 0.2;
-                    }
-                } else if (lFlip && lastLFlip) {
-                    // Holding UP
-                    if (bY >= 50 && bY <= 54) {
-                        bY = 50;
-                        bVY = -bVY * 0.2; // soft bounce
-                        bVX += 0.05; // rolls right towards center
-                    }
-                } else {
-                    // Flipper DOWN
-                    if (bY >= 60 && bY <= 64) {
-                        bY = 60;
+            // Top Curve Push
+            if (bY < 15) {
+                if (bX < 45) { bVX += 0.2; bVY += 0.1; }
+                else if (bX > 83) { bVX -= 0.2; bVY += 0.1; }
+            }
+
+            // Slingshots
+            if (bX > 40 && bX < 47 && bY > 48 && bY < 58) {
+                bVX = 4.0; bVY = -3.0; score += 5; bX = 47;
+            }
+            if (bX > 81 && bX < 88 && bY > 48 && bY < 58) {
+                bVX = -4.0; bVY = -3.0; score += 5; bX = 81;
+            }
+
+            // Left Flipper Zone (X: 45 to 60)
+            if (bX >= 45 && bX <= 60) {
+                float flipY = lFlip ? 60 - (bX - 45) * (8.0/15.0) : 60 + (bX - 45) * (4.0/15.0);
+                if (bY >= flipY - 1 && bY <= flipY + 4) {
+                    bY = flipY - 2;
+                    if (lFlip && !lastLFlip) {
+                        bVY = -5.0; 
+                        bVX = (bX - 45) * 0.2 + 0.5;
+                    } else if (lFlip) {
                         bVY = -bVY * 0.2;
-                        bVX += 0.1; // rolls right towards gap
+                        bVX += 0.05;
+                    } else {
+                        bVY = -bVY * 0.2;
+                        bVX += 0.2; // rolls right towards gap
                     }
                 }
             }
             
-            // Right Flipper Zone (X: 64 to 83)
-            if (bX > 64 && bX <= 83) {
-                if (rFlip && !lastRFlip) {
-                    // Sweeping UP
-                    if (bY >= 50 && bY <= 64) {
-                        bY = 50;
+            // Right Flipper Zone (X: 68 to 83)
+            if (bX >= 68 && bX <= 83) {
+                float flipY = rFlip ? 60 - (83 - bX) * (8.0/15.0) : 60 + (83 - bX) * (4.0/15.0);
+                if (bY >= flipY - 1 && bY <= flipY + 4) {
+                    bY = flipY - 2;
+                    if (rFlip && !lastRFlip) {
                         bVY = -5.0;
-                        bVX = (bX - 83) * 0.2; // angled towards center
-                    }
-                } else if (rFlip && lastRFlip) {
-                    // Holding UP
-                    if (bY >= 50 && bY <= 54) {
-                        bY = 50;
+                        bVX = (bX - 83) * 0.2 - 0.5;
+                    } else if (rFlip) {
                         bVY = -bVY * 0.2;
-                        bVX -= 0.05; // rolls left towards center
-                    }
-                } else {
-                    // Flipper DOWN
-                    if (bY >= 60 && bY <= 64) {
-                        bY = 60;
+                        bVX -= 0.05;
+                    } else {
                         bVY = -bVY * 0.2;
-                        bVX -= 0.1; // rolls left towards gap
+                        bVX -= 0.2; // rolls left towards gap
                     }
                 }
             }
@@ -145,11 +143,20 @@ public:
             display.clearDisplay();
             
             // Draw Walls
-            display.drawLine(32, 0, 32, 40, WHITE);
+            display.drawLine(32, 10, 32, 40, WHITE);
             display.drawLine(32, 40, 45, 60, WHITE); // left slant
             
-            display.drawLine(96, 0, 96, 40, WHITE);
+            display.drawLine(96, 10, 96, 40, WHITE);
             display.drawLine(96, 40, 83, 60, WHITE); // right slant
+            
+            // Top curve
+            display.drawLine(32, 10, 42, 2, WHITE);
+            display.drawLine(96, 10, 86, 2, WHITE);
+            display.drawLine(42, 2, 86, 2, WHITE);
+
+            // Slingshots
+            display.drawLine(42, 50, 45, 58, WHITE);
+            display.drawLine(86, 50, 83, 58, WHITE);
             
             // Draw Flippers
             if (lFlip) {
@@ -169,7 +176,7 @@ public:
             }
             
             // Draw Bumpers
-            for(int i = 0; i < 3; i++) {
+            for(int i = 0; i < 5; i++) {
                 display.drawCircle(bumpX[i], bumpY[i], 6, WHITE);
                 display.fillCircle(bumpX[i], bumpY[i], 2, WHITE);
             }

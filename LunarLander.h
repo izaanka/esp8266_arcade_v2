@@ -61,12 +61,12 @@ public:
             
             float groundY = getTerrainY(pX);
             
-            if (pY + 4 >= groundY) { // Ship bottom is pY + 4
+            if (pY >= groundY) { // Ship bottom is visually drawn at pY
                 // Collision!
                 // Check if landed safely on pad
                 bool onPad = (pX >= padIndex * 16 && pX <= (padIndex+1) * 16);
-                bool upright = (abs(pAngle) < 0.2);
-                bool slow = (pVY < 1.0 && abs(pVX) < 0.5);
+                bool upright = (abs(pAngle) < 0.3); // made slightly easier
+                bool slow = (pVY < 1.5 && abs(pVX) < 1.0); // made slightly easier
                 
                 if (onPad && upright && slow) {
                     state = 1; // Win
@@ -87,13 +87,7 @@ public:
                 }
             }
             
-            // Ship
-            int bx = pX - sin(pAngle)*4; int by = pY + cos(pAngle)*4;
-            int lx = pX - cos(pAngle)*4; int ly = pY - sin(pAngle)*4;
-            int rx = pX + cos(pAngle)*4; int ry = pY + sin(pAngle)*4;
-            display.drawTriangle((int)pX, (int)pY - 4, lx, ly, rx, ry, WHITE); // Actually top is pY-4? wait, up is -Y.
-            
-            // simpler ship: line from center to top, and a base
+            // Ship (visually rests at pY)
             display.drawLine(pX, pY, pX + sin(pAngle)*6, pY - cos(pAngle)*6, WHITE); // nose
             display.drawLine(pX - cos(pAngle)*3, pY - sin(pAngle)*3, pX + cos(pAngle)*3, pY + sin(pAngle)*3, WHITE); // base
             

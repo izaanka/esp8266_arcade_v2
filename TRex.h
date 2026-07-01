@@ -83,9 +83,20 @@ public:
             
             // Player
             if (ducking) {
-                display.fillRect(10, 44, 12, 6, WHITE); // longer, shorter
-            } else {
-                display.fillRect(10, 38, 8, 12, WHITE); // tall
+                display.fillRect(10, (int)pY - 6, 12, 6, WHITE); // longer, shorter
+            } else if (pY < 49.5) { // Jumping
+                display.fillRect(10, (int)pY - 12, 8, 10, WHITE); // body
+                display.drawPixel(10, (int)pY - 2, WHITE); // tucked legs
+                display.drawPixel(16, (int)pY - 2, WHITE);
+            } else { // Running
+                display.fillRect(10, (int)pY - 12, 8, 10, WHITE);
+                if ((score / 5) % 2 == 0) {
+                    display.drawLine(12, (int)pY - 2, 12, (int)pY, WHITE); // left down
+                    display.drawLine(16, (int)pY - 2, 14, (int)pY - 1, WHITE); // right up
+                } else {
+                    display.drawLine(12, (int)pY - 2, 14, (int)pY - 1, WHITE);
+                    display.drawLine(16, (int)pY - 2, 16, (int)pY, WHITE);
+                }
             }
             
             // Obstacles

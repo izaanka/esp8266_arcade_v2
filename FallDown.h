@@ -16,7 +16,7 @@ public:
     void init() override {
         pX = 64; pY = 10; score = 0; state = 0; speed = 1.0;
         for(int i=0; i<6; i++) {
-            plats[i].y = 20 + i*16;
+            plats[i].y = 64 + i*16;
             plats[i].gapX = random(10, 100);
         }
     }
