@@ -44,7 +44,7 @@ public:
         } else if (state == 1) {
             setAng += dir * 0.05;
             if (setAng > 1.0 || setAng < -1.0) dir = -dir; // angle sweep
-            if (cS && !lastSelect) { state = 2; setPow = 0; dir = 1; }
+            if (cS && !lastSelect) { state = 2; setPow = 0.5; dir = 1; }
         } else if (state == 2) {
             setPow += dir * 0.2;
             if (setPow > 5.0 || setPow < 0.5) dir = -dir;
