@@ -16,6 +16,7 @@ private:
     bool lastSelect = true;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Flappy Bird"; }
 
     void init() override {

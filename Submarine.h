@@ -15,6 +15,7 @@ private:
     float currentTop = 10, currentBot = 54;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Submarine Cave"; }
 
     void init() override {

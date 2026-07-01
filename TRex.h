@@ -23,6 +23,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "T-Rex Run"; }
 
     void init() override {

@@ -16,6 +16,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Tron Lightcycles"; }
 
     void init() override {

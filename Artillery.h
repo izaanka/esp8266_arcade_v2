@@ -42,6 +42,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Artillery"; }
 
     void init() override {

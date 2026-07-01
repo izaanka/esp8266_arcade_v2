@@ -85,6 +85,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Tetris"; }
 
     void init() override {

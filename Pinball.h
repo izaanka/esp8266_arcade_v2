@@ -15,6 +15,7 @@ private:
     bool lastRFlip = false;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Pinball"; }
 
     void init() override {

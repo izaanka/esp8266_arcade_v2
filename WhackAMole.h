@@ -12,6 +12,7 @@ private:
     bool btnL = true, btnS = true, btnR = true;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Whack-A-Mole"; }
 
     void init() override {

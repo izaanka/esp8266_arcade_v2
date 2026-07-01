@@ -27,6 +27,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Bowling"; }
 
     void init() override {

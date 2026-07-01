@@ -34,6 +34,7 @@ private:
     bool lastLeft = true, lastRight = true;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Pacman"; }
 
     void init() override {

@@ -11,6 +11,7 @@ private:
     Platform plats[6];
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Fall Down"; }
 
     void init() override {

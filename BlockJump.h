@@ -11,6 +11,7 @@ private:
     int state = 30;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Block Jump"; }
 
     void init() override {

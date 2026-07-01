@@ -36,6 +36,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Missile Command"; }
 
     void init() override {

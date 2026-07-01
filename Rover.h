@@ -22,6 +22,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Mars Rover"; }
 
     void init() override {

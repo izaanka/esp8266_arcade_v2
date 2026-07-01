@@ -10,6 +10,7 @@ private:
     int state = 60;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Space Shooter"; }
 
     void init() override {

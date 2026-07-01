@@ -39,6 +39,7 @@ private:
     }
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Math Quiz"; }
 
     void init() override {

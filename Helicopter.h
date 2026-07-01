@@ -13,6 +13,7 @@ private:
     float offset = 0;
 
 public:
+    virtual int getScore() override { return score; }
     const char* getName() override { return "Helicopter"; }
 
     void init() override {
