@@ -1,102 +1,26 @@
-# ESP8266 Arcade
+# ESP8266 OLED Arcade Platform
 
-A modular, multi-game arcade platform built for the ESP8266 microcontroller and a 128x64 I2C OLED display.
+Welcome to the ultimate custom arcade platform running on a single ESP8266!
 
-This project features a dynamic, object-oriented architecture where games are self-registering. Adding a new game is as simple as dropping in a header file and including it in the main sketch!
+## 🎮 Features
+- **Massive Library**: Contains exactly **100 unique, hand-crafted games** spanning logic puzzles, physics simulations, racing, timing, and action!
+- **Auto-Registry Engine**: Modular `.h` architecture. Just drop a game file in the folder, `#include` it, and the engine automatically injects it into the main menu without modifying `setup()` or `loop()`.
+- **EEPROM Highscores**: Automatically tracks your top scores for every single game. Saves only when you beat a highscore to drastically reduce flash memory wear.
+- **Dynamic Menus**: Features a scrolling master list, a dedicated highscores screen, and an interactive settings toggler.
+- **Hardware**: Uses an ESP8266, a 128x64 I2C OLED display (SSD1306), and just 3 tactile buttons (Left, Select, Right).
 
-## Included Games (50 Total!)
+## 🚀 The 100 Game Milestone
+This project has reached its architectural limit of 100 distinct games. Highlights include:
+- **Classics**: Tetris, Pong, Pacman, Space Invaders, Asteroids, Snake, Flappy Bird, Geometry Dash
+- **Logic & Puzzles**: 2048, Minesweeper, Mastermind, Hangman, LightsOut, Plumber, Bomberman, Word Scramble
+- **Physics**: Air Hockey, Rope Swing (Tarzan), Hill Climb, Bungee Jump, Ski Jump, Blob Volley
+- **Action**: Zombie Survival, Karate, Heli Rescue, Target Shooter, Space Dock, UFO Abduction
+- **Sports**: Tennis, Bowling, Golf, Penalty Kick, Diving, Javelin Throw, Sumo
 
-### 🧠 Puzzle & Logic
-- **Lights Out**, **Simon Says**, **Minesweeper**, **Tic-Tac-Toe**, **Tetris**, **2048**, **Sokoban**, **Connect 4**, **Mastermind**, **Math Quiz**
+## 🛠 Setup
+1. Wire up the SSD1306 OLED via I2C (SDA to D2/GPIO4, SCL to D1/GPIO5).
+2. Wire up 3 tactile buttons to D5 (Left), D6 (Select), and D7 (Right). Connect the other legs to Ground.
+3. Open `esp8266_arcade.ino` in the Arduino IDE.
+4. Upload to your ESP8266.
 
-### 🕹️ Arcade Classics
-- **Breakout**, **Space Shooter**, **Pacman**, **Asteroids**, **Frogger**, **Pong**, **Lunar Lander**, **Space Invaders**, **Duck Hunt**, **River Raid**, **Missile Command**
-
-### 🏃 Runners & Platformers
-- **Block Jump**, **Flappy Bird**, **Geometry Dash**, **Snake**, **Sky Jumper**, **T-Rex Run**, **Fall Down**, **Helicopter**, **Slalom Skiing**
-
-### 💥 Action & Physics
-- **Pinball**, **Highway Racing**, **Apple Catch**, **Artillery**, **Mars Rover**, **Timber**
-
-### ⚡ Reflex & Timing
-- **Reaction Time**, **Stacker**, **Whack-A-Mole**, **Rhythm Hero**, **Bop It**, **Bowling**, **Maze Runner**, **Tron Lightcycles**
-
-### 🎰 Casino & Parlor
-- **Blackjack 21**, **Slot Machine**, **Memory Match**
-
----
-
-## Hardware Requirements
-
-- **ESP8266** (NodeMCU / Wemos D1 Mini recommended)
-- **128x64 OLED Display** (SSD1306 I2C)
-- **3 Push Buttons** (Left, Action, Right)
-- Breadboard and jumper wires
-
-### Pinout Configuration
-
-Connect the hardware to your ESP8266 as follows:
-
-| Component | ESP8266 Pin | GPIO Pin | Notes |
-| :--- | :--- | :--- | :--- |
-| **OLED SDA** | D1 | GPIO 5 | I2C Data |
-| **OLED SCL** | D2 | GPIO 4 | I2C Clock |
-| **Left Button** | D5 | GPIO 14 | Connect to Ground (Uses Internal Pullup) |
-| **Select / Action**| D6 | GPIO 12 | Connect to Ground (Uses Internal Pullup) |
-| **Right Button** | D7 | GPIO 13 | Connect to Ground (Uses Internal Pullup) |
-
-> **Note:** Long pressing the **Left Button (D5)** at any point during gameplay will trigger a global interrupt and return you to the main menu.
-
----
-
-## Architecture & Adding Your Own Game
-
-This platform uses a modular architecture. The core engine (`esp8266_arcade.ino`) manages the display, hardware inputs, and the main menu. Games are encapsulated in their own `.h` files and inherit from the `ArcadeGame` base class.
-
-### How to Add a New Game
-
-You don't need to touch the main menu rendering code or input state machines to add a game. 
-
-1. Create a new `.h` file in the project folder (e.g. `MyNewGame.h`).
-2. Define your class, inheriting from `ArcadeGame`. Implement the `getName()`, `init()`, and `update()` methods.
-3. At the bottom of your file, add the `REGISTER_GAME(YourClassName)` macro.
-4. Finally, open `esp8266_arcade.ino` and `#include "MyNewGame.h"` in the "Game Includes" section.
-
-#### Code Template (`MyNewGame.h`)
-
-```cpp
-#pragma once
-
-class MyNewGame : public ArcadeGame {
-private:
-  int state = 90; // Suggestion: Use state machines for your game flow
-  // Your game variables here...
-
-public:
-  const char *getName() override { 
-      return "My New Game"; // This is what appears in the Main Menu!
-  }
-
-  void init() override {
-    // Code to run when the user selects your game from the menu.
-    // Reset scores, player positions, and timers here.
-  }
-
-  void update() override {
-    // This runs in a loop continuously while your game is active.
-    
-    // Example interaction:
-    // if (digitalRead(btnSelect) == LOW) { ... }
-    
-    // Remember to call returnToMenu(); when the game is over and 
-    // the user wants to go back!
-  }
-};
-
-// This macro handles appending the game to the menu array dynamically!
-REGISTER_GAME(MyNewGame)
-```
-
-## Dependencies
-- [Adafruit GFX Library](https://github.com/adafruit/Adafruit-GFX-Library)
-- [Adafruit SSD1306 Library](https://github.com/adafruit/Adafruit_SSD1306)
+*Tip: Enable Highscores in the Settings menu before playing!*
